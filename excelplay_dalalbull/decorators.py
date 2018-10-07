@@ -8,3 +8,13 @@ def login_required(view_func):
 		else :
 			return JsonResponse({'msg':'User not logged in'})
 	return login_check
+
+def isLoggedInCh(conn_func):
+	def new_conn_func(message):
+		if message.http_session.get('logged_in',False):
+			return conn_func(message)
+		else:
+			message.reply_channel.send({
+				'text' : json.dumps({ "close" : True })
+			})
+	return new_conn_func

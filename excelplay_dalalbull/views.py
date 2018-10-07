@@ -445,3 +445,48 @@ def getMostActiveValue():
             'trade_value' : stock.trade_Value,
             })
     return mostActiveVal
+
+
+def ticker_data():
+    stocks = Stock_data.objects.all()
+    tickerData = []
+    for stock in stocks:
+        tickerData.append({
+            'name': stock.symbol,
+            'current_price' : stock.current_price,
+            'change_per' : stock.change_per,
+            })
+    return {
+            'tickerData': tickerData,
+        }
+
+
+
+########### FUNCTIONS SHARED WITH CHANNEL CONSUMER ######################
+
+
+def niftyData():
+    nifty= Stock_data.objects.get(symbol='NIFTY 50')
+
+    data_to_send = {
+        'current_price': float(nifty.current_price),
+        'change' : float(nifty.change) , 
+    }
+    
+    return data_to_send
+
+def graph(company):
+    graph_values=Old_Stock_data.objects.filter(symbol=company).order_by('time')
+    graph_data=[]
+    for i in graph_values:
+        temp=[]
+        timez=timezone(settings.TIME_ZONE)
+        time=i.time.astimezone(timez)
+        temp.append( (time.hour-9)*60 + time.minute -15 )
+        temp.append( i.current_price )
+        graph_data.append(temp)
+
+    data_to_send = {
+        'graph_data' : graph_data,
+    }
+    return data_to_send

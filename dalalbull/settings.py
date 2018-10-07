@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -51,6 +52,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'dalalbull.urls'
+ASGI_APPLICATION = "dalalbull.routing.application"
 
 TEMPLATES = [
     {
@@ -140,7 +142,7 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 CELERYBEAT_SCHEDULE = {
     'net-every-20-seconds': { #update Company Details
-            'task': 'excelplay_dalalbull.tasks.tq',
+            'task': 'excelplay_dalalbull.tasks.stock_update',
             'schedule': timedelta(seconds=1),
             'args': ()
      },
