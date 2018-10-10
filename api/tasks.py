@@ -6,15 +6,11 @@ from urllib import request
 import urllib
 import json
 
-from nsetools import Nse
-nse=Nse()
-
 from .models import *
 
 import os
 
-#To get the stock codes of all the companies
-all_stock_codes=nse.get_stock_codes()
+from .consumers import portfolioDataPush
 
 print("dalalbull tasks")
 
@@ -42,6 +38,11 @@ def net():
     print("Networth Update");
     networth()
     return
+
+@shared_task
+def broadcastPortfolioData():
+	print("Portfolio data broadcasted!")
+	portfolioDataPush()
 
 #=========Update details of company========#
 # def stockdata():
